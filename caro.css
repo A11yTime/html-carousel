@@ -1,0 +1,86 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Carousel container */
+.carousel-container {
+    position: relative;
+    max-width: 90%;  /* Control the width of the carousel */
+    margin: 20px auto;
+    overflow: hidden;  /* Hide anything outside the container */
+    height: 400px; /* Set a fixed height for the carousel container */
+}
+
+/* The actual carousel which holds all items */
+.carousel {
+    display: flex;  /* Stack items horizontally */
+    transition: transform 0.5s ease;  /* Smooth sliding transition */
+    width: 100%;  /* Ensure carousel width is 100% of the container */
+}
+
+/* Carousel items */
+.carousel-item {
+    width: 100%;  /* Each image should take up the full width of the container */
+    flex-shrink: 0;  /* Prevent the items from shrinking */
+    position: relative; /* Ensure proper positioning */
+    overflow: hidden; /* Hide the overflow from adjacent images */
+}
+
+/* Ensuring the images fill their container properly */
+.carousel img {
+    width: 100%;  /* Ensure images take up full container width */
+    height: 100%;  /* Ensure images take up full container height */
+    object-fit: cover; /* Ensure images cover the entire container without distortion */
+    display: block;  /* Remove any unwanted space below the image */
+}
+
+
+
+/* Previous and Next buttons */
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.carousel-button.prev {
+    left: 10px;
+}
+
+.carousel-button.next {
+    right: 10px;
+}
+
+.carousel-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Play/Pause button styles */
+.play-pause-button {
+    position: absolute;
+    top: 10px;  /* Position 10px from the top */
+    left: 10px;  /* Position 10px from the left */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10;
+}
+
+.play-pause-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+

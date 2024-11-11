@@ -1,0 +1,39 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Carousel container */
+.carousel-container {
+    position: relative;
+    max-width: 90%;  /* Control the width of the carousel */
+    margin: 20px auto;
+    overflow: hidden;  /* Hide anything outside the container */
+    height: 400px; /* Set a fixed height for the carousel container */
+}
+
+/* The actual carousel which holds all items */
+.carousel {
+    display: flex;  /* Stack items horizontally */
+    transition: transform 0.5s ease;  /* Smooth sliding transition */
+    width: 100%;  /* Carousel width should match container */
+}
+
+/* Carousel items, ensuring they are full-width */
+.carousel-item {
+    min-width: 100%;  /* Each image takes up the full width of the container */
+    flex-shrink: 0;  /* Prevent the items from shrinking */
+    position: relative; /* Ensure positioning is correct for image */
+    overflow: hidden; /* Prevent overflow of images */
+}
+
+/* Ensuring the images fill their container properly */
+.carousel img {
+    width: 100%;  /* Ensure images take up full container width */
+    height: 100%;  /* Ensure images take up full container height */
+    object-fit: cover; /* Ensure images cover the entire container without distortion */
+    display: block;  /* Remove any unwanted space below the image */
+}
