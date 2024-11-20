@@ -69,6 +69,7 @@ function startAutoRotate() {
 
     // Change the button to show "pause" icon
     playPauseButton.innerHTML = '&#10074;&#10074;';  // Pause icon
+    playPauseButton.setAttribute('aria-label', 'Pause auto-rotation');
 }
 
 // Stop auto-rotation
@@ -84,6 +85,7 @@ function stopAutoRotate() {
 
     // Change the button to show "play" icon
     playPauseButton.innerHTML = '&#9654;';  // Play icon
+    playPauseButton.setAttribute('aria-label', 'Start auto-rotation'); 
 }
 
 // Toggle play/pause
@@ -92,6 +94,17 @@ function toggleAutoRotate() {
         stopAutoRotate();  // If already rotating, stop it and show play icon
     } else {
         startAutoRotate();  // If paused, start auto-rotation and show pause icon
+    }
+}
+
+// Handle keyboard interactions
+function handleKeyPress(event) {
+    if (event.key === 'ArrowLeft') {
+        moveSlide(-1); // Previous slide
+    } else if (event.key === 'ArrowRight') {
+        moveSlide(1); // Next slide
+    } else if (event.key === ' ') {  // Spacebar toggles play/pause
+        toggleAutoRotate();
     }
 }
 

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Carousel</title>
+    <link rel="stylesheet" href="caro.css">
+</head>
+<body>
+    <div class="carousel-container" role="region" aria-label="Image carousel" tabindex="0" aria-live="polite">
+        <div class="carousel" role="listbox">
+            <div class="carousel-item" role="option" aria-hidden="false">
+                <img src="image1.jpg" alt="Image 1">
+            </div>
+            <div class="carousel-item" role="option" aria-hidden="true">
+                <img src="image2.jpg" alt="Image 2">
+            </div>
+            <div class="carousel-item" role="option" aria-hidden="true">
+                <img src="image3.jpg" alt="Image 3">
+            </div>
+        </div>
+    
+        <button class="carousel-button prev" aria-label="Previous" onclick="moveSlide(-1)">
+            &#10094;
+        </button>
+        <button class="carousel-button next" aria-label="Next" onclick="moveSlide(1)">
+            &#10095;
+        </button>
+        <button class="play-pause-button" aria-label="Play/Pause Auto-Rotation" onclick="toggleAutoRotate()">
+            &#9654; / &#10074;&#10074;
+        </button>
+    </div>
+    
+
+    <script>
+      let currentIndex = 0;
+let autoRotateInterval;
+const items = document.querySelectorAll('.carousel-item');
+const totalItems = items.length / 2; // We have duplicated the items for infinite loop
+const carousel = document.querySelector('.carousel');
+const playPauseButton = document.querySelector('.play-pause-button');
+const carouselContainer = document.querySelector('.carousel-container');
+
+let isAutoRotating = false; // To track whether auto-rotation is on
+
+// Set transition to none for instant slide movement
+carousel.style.transition = "none"; // No transition for immediate movement
+
+// Function to move to the next or previous slide
+function moveSlide(direction) {
+    // Update the currentIndex for next/prev
+    currentIndex = (currentIndex + direction + totalItems) % totalItems; // Use modulo to loop index
+
+    updateCarousel();
+}
+
+// Function to update the carousel transform to show the correct image
+function updateCarousel() {
+    // Calculate the offset based on the current index
+    const offset = -currentIndex * 100; // Move to the next item (100% width)
+
+    // Apply the transform to slide the carousel
+    carousel.style.transform = `translateX(${offset}%)`;
+
+    // When the carousel reaches the last duplicated items, quickly reset the transform for a seamless loop
+    if (currentIndex === totalItems - 1) {
+        setTimeout(() => {
+            // Disable transition momentarily to avoid visible jump
+            carousel.style.transition = "none"; // Disable transition for an instant reset
+            carousel.style.transform = "translateX(0%)"; // Jump back to the start
+            currentIndex = 0; // Reset index to the start
+        }, 0); // Immediate reset with zero delay
+    } else {
+        // Re-enable transition (even though it will be instantaneous now)
+        carousel.style.transition = "none"; // Keep it immediate
+    }
+}
+
+// Function to start auto-rotation
+function startAutoRotate() {
+    isAutoRotating = true;
+    playPauseButton.innerHTML = '&#10074;&#10074;'; // Change to pause icon
+    autoRotateInterval = setInterval(() => {
+        moveSlide(1); // Move to the next slide every 3 seconds
+    }, 3000); // Rotate every 3 seconds
+}
+
+// Function to stop auto-rotation
+function stopAutoRotate() {
+    clearInterval(autoRotateInterval);
+    isAutoRotating = false;
+    playPauseButton.innerHTML = '&#9654;'; // Change to play icon
+}
+
+// Function to toggle play/pause
+function toggleAutoRotate() {
+    if (isAutoRotating) {
+        stopAutoRotate();
+    } else {
+        startAutoRotate();
+    }
+}
+
+// Start auto-rotation when the page loads
+startAutoRotate();
+
+
+    </script>
+</body>
+</html>
