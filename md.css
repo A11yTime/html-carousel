@@ -1,0 +1,134 @@
+/* Basic reset to remove default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+  }
+  
+  .md-content {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style for headers */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georgia', serif;
+    color: #333;
+    margin-bottom: 0.8em;
+  }
+  
+  h1 {
+    font-size: 2.5em;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+  }
+  
+  h2 {
+    font-size: 2em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 8px;
+  }
+  
+  h3 {
+    font-size: 1.75em;
+  }
+  
+  /* Style for paragraphs */
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5em;
+    color: #555;
+  }
+  
+  /* Style for links */
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Style for code blocks */
+  pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    overflow-x: auto;
+  }
+  
+  code {
+    background-color: #f4f4f4;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+  }
+  
+  /* Style for unordered and ordered lists */
+  ul, ol {
+    margin-left: 20px;
+    margin-bottom: 1.5em;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+  /* Blockquotes */
+  blockquote {
+    background-color: #f9f9f9;
+    padding: 1em;
+    border-left: 5px solid #007bff;
+    margin: 1.5em 0;
+    font-style: italic;
+  }
+  
+  /* Style for images */
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 20px 0;
+  }
+  
+  /* Style for tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5em;
+  }
+  
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  /* Style for horizontal rule */
+  hr {
+    border: 0;
+    border-top: 2px solid #ccc;
+    margin: 2em 0;
+  }
+  

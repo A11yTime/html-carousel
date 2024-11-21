@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accessible Carousel with Auto-Rotation and Play/Pause</title>
+    <title>Accessible Circular Carousel</title>
     <style>
         /* General body styling */
         body {
@@ -26,13 +25,13 @@
         /* The actual carousel which holds all items */
         .carousel {
             display: flex;
-            transition: transform 0.05s ease;
-            width: 100%;
+            transition: transform 0.5s ease; /* Smooth sliding transition */
+            width: 300%; /* This is three times the width of the container */
         }
 
         /* Carousel items */
         .carousel-item {
-            width: 100%;
+            width: 100%; /* Each item takes up 100% of the container width */
             flex-shrink: 0;
             position: relative;
             overflow: hidden;
@@ -102,7 +101,6 @@
         }
     </style>
 </head>
-
 <body>
     <section class="carousel-container" aria-label="Image carousel" tabindex="0" aria-live="polite">
         <div class="carousel" role="group" aria-roledescription="Image carousel">
@@ -120,7 +118,7 @@
         <button class="carousel-button prev" aria-label="Previous" onclick="moveSlide(-1)">
             &#10094;
         </button>
-        <button class="carousel-button next" aria-label="Next" onclick="moveSlide(1)" onkeydown="handleKeyPress(event)">
+        <button class="carousel-button next" aria-label="Next" onclick="moveSlide(1)">
             &#10095;
         </button>
         <button class="play-pause-button" aria-label="Play" onclick="toggleAutoRotate()">
@@ -136,43 +134,22 @@
         const carousel = document.querySelector('.carousel');
         const playPauseButton = document.querySelector('.play-pause-button');
         const carouselContainer = document.querySelector('.carousel-container');
-        let ariaLiveTimeout;
         let isAutoRotating = false;
 
         // Check for "prefers-reduced-motion" setting
         const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+        // Move the slide based on direction (next or previous)
         function moveSlide(direction) {
-            if (direction === 1 && currentIndex === totalItems - 1) {
-                carousel.style.transition = "none"; // Remove transition for "wraparound"
-                currentIndex = 0;
-            } else if (direction === -1 && currentIndex === 0) {
-                carousel.style.transition = "none"; // Remove transition for "wraparound"
-                currentIndex = totalItems - 1;
-            } else {
-                currentIndex = (currentIndex + direction + totalItems) % totalItems;
-            }
-
+            currentIndex = (currentIndex + direction + totalItems) % totalItems; // Circular logic
             updateCarousel();
-
-            // Set aria-live on carousel container for manual navigation
-            if (!isAutoRotating) {
-                carouselContainer.setAttribute('aria-live', 'polite'); // Announce the change to screen readers
-                clearTimeout(ariaLiveTimeout); // Clear existing timeout
-                ariaLiveTimeout = setTimeout(() => {
-                    // carouselContainer.setAttribute('aria-live', 'off');  // Reset after a brief delay
-                }, 2000);
-            }
         }
 
+        // Update the carousel based on the currentIndex
         function updateCarousel() {
             const offset = -currentIndex * 100; // Calculate the offset for the slide
-            if (!prefersReducedMotion) {
-                carousel.style.transition = "transform 0.05s ease"; // Enable smooth transition
-            } else {
-                carousel.style.transition = "none"; // No transition if reduce motion is enabled
-            }
-            carousel.style.transform = `translateX(${offset}%)`;
+            carousel.style.transition = "transform 0.5s ease"; // Smooth transition
+            carousel.style.transform = `translateX(${offset}%)`; // Apply the transformation
 
             // Update aria-hidden for the items, so screen readers ignore non-visible items
             items.forEach((item, index) => {
@@ -180,6 +157,7 @@
             });
         }
 
+        // Start the auto-rotate functionality
         function startAutoRotate() {
             if (prefersReducedMotion) return; // If the user prefers reduced motion, do not start auto-rotate
 
@@ -191,9 +169,10 @@
             }, 3000);
 
             playPauseButton.innerHTML = '&#10074;&#10074;'; // Change button to "pause"
-            playPauseButton.setAttribute('aria-label', 'Pause')
+            playPauseButton.setAttribute('aria-label', 'Pause');
         }
 
+        // Stop the auto-rotate functionality
         function stopAutoRotate() {
             clearInterval(autoRotateInterval);
             autoRotateInterval = null;
@@ -201,32 +180,15 @@
             carouselContainer.setAttribute('aria-live', 'polite'); // Re-enable live announcements when rotation is paused
 
             playPauseButton.innerHTML = '&#9654;'; // Change button to "play"
-            playPauseButton.setAttribute('aria-label', 'Play')
+            playPauseButton.setAttribute('aria-label', 'Play');
         }
 
+        // Toggle auto-rotate functionality when play/pause button is clicked
         function toggleAutoRotate() {
             if (autoRotateInterval) {
                 stopAutoRotate(); // Stop rotation and change to "play" icon
             } else {
                 startAutoRotate(); // Start rotation and change to "pause" icon
-            }
-        }
-
-        /* Keyboard Navigation */
-        function handleKeyPress(event) {
-            switch (event.key) {
-                case 'ArrowLeft':
-                    moveSlide(-1); // Move to the previous slide
-                    break;
-                case 'ArrowRight':
-                    moveSlide(1); // Move to the next slide
-                    break;
-                case 'Enter':
-                case ' ':
-                    toggleAutoRotate(); // Toggle play/pause on Enter or Space
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -236,5 +198,4 @@
         }
     </script>
 </body>
-
 </html>
