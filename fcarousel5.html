@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessible Carousel with Auto-Rotation and Play/Pause</title>
+    <style>    
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* Carousel container */
+        .parent-container {
+            position: relative;
+            max-width: 90%;  
+            margin: 20px auto;
+            overflow: hidden;  
+            height: 400px; 
+        }
+
+        .carousel {
+            display: flex;  
+            transition: transform 0.02s ease;  
+            width: 100%;  
+        }
+
+        .carousel-item {
+            width: 100%;  
+            flex-shrink: 0;  
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        .carousel img {
+            width: 100%;  
+            height: 100%;  
+            object-fit: cover; 
+            display: block;  
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .carousel-button.prev {
+            left: 10px;
+        }
+
+        .carousel-button.next {
+            right: 10px;
+        }
+
+        .carousel-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .play-pause-button {
+            position: absolute;
+            top: 10px;  
+            left: 10px ;  
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            z-index: 10;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .carousel {
+                transition: none; /* Disable transition for users who prefer reduced motion */
+            }
+
+            .carousel-button {
+                display: none; /* Optionally hide the buttons if reduced motion is preferred */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1></h1>
+    <div class="parent-container">
+        <button class="play-pause-button" aria-label="Play" onclick="toggleAutoRotate()">
+            <span aria-hidden="true">&#9654; </span> 
+         </button>
+        <section class="carousel-container" aria-label="carousel" aria-live="polite">
+            <div class="carousel" >
+                <div class="carousel-item" role="group" aria-roledescription="slide" aria-label="1 of 3" aria-hidden="false">
+                    <img src="/slide_image/image1.jpg" alt="Image 1">
+                </div>
+                <div class="carousel-item" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-hidden="true">
+                    <img src="/slide_image/image2.jpg" alt="Image 2">
+                </div>
+                <div class="carousel-item" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-hidden="true">
+                    <img src="/slide_image/image3.jpg" alt="Image 3">
+                </div>
+            </div>
+            
+            <button class="carousel-button prev" id="prevButton" aria-label="Previous slide" onclick="moveSlide(-1)">
+               <span aria-hidden="true">&#10094;</span> 
+            </button>
+            <button class="carousel-button next" id="nextButton" aria-label="Next slide" onclick="moveSlide(1)">
+               <span aria-hidden="true">&#10095;</span> 
+            </button>
+        </section>
+    </div>
+   
+<script>
+    let currentIndex = 0;
+    let autoRotateInterval;
+    const items = document.querySelectorAll('.carousel-item');
+    const totalItems = items.length;
+    const carousel = document.querySelector('.carousel');
+    const playPauseButton = document.querySelector('.play-pause-button');
+    const carouselContainer = document.querySelector('.carousel-container');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton')
+    let ariaLiveTimeout;
+    let isAutoRotating = false;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function moveSlide(direction) {
+        if (direction === 1 && currentIndex === totalItems - 1) {
+            carousel.style.transition = "none"; 
+            currentIndex = 0;  
+        } else if (direction === -1 && currentIndex === 0) {
+            carousel.style.transition = "none"; 
+            currentIndex = totalItems - 1;  
+        } else {
+            currentIndex = (currentIndex + direction + totalItems) % totalItems;
+        }
+
+        updateCarousel();
+        if (!isAutoRotating) {
+            carouselContainer.setAttribute('aria-live', 'polite');
+        }
+    }
+
+    function updateCarousel() {
+        const offset = -currentIndex * 100; 
+        if (!prefersReducedMotion) {
+                carousel.style.transition = "transform 0.03s ease"; 
+            } else {
+                carousel.style.transition = "none"; 
+            }
+        carousel.style.transform = `translateX(${offset}%)`;
+
+        items.forEach((item, index) => {
+            item.setAttribute('aria-hidden', index !== currentIndex);
+        });
+    }
+
+        prevButton.addEventListener('focus', () => {
+            carouselContainer.setAttribute('aria-live', 'polite');
+            
+            stopAutoRotate(); 
+        });
+        prevButton.addEventListener('blur', () => {
+            carouselContainer.setAttribute('aria-live', 'off');
+            startAutoRotate(); 
+        });
+
+        nextButton.addEventListener('focus', () => {
+            carouselContainer.setAttribute('aria-live', 'polite');
+            console.log('focused')
+            stopAutoRotate(); 
+        });
+        nextButton.addEventListener('blur', () => {
+            carouselContainer.setAttribute('aria-live', 'off');
+            startAutoRotate(); 
+        });
+
+    // Start auto-rotation
+    function startAutoRotate() {
+        if(prefersReducedMotion) return;
+        isAutoRotating = true;
+    
+        playPauseButton.setAttribute('aria-label', 'Pause');
+        carouselContainer.setAttribute('aria-live', 'off');
+
+        autoRotateInterval = setInterval(() => {
+            moveSlide(1);  
+        }, 3000);  
+
+        playPauseButton.innerHTML = '&#10074;&#10074;';  
+    }
+
+    function stopAutoRotate() {
+        clearInterval(autoRotateInterval);
+        autoRotateInterval = null;
+        isAutoRotating = false;
+        playPauseButton.setAttribute('aria-label', 'Play');
+        carouselContainer.setAttribute('aria-live', 'polite');
+        playPauseButton.innerHTML = '&#9654;';  
+    }
+
+    function toggleAutoRotate() {
+        if (autoRotateInterval) {
+            stopAutoRotate();  
+            startAutoRotate();  
+        }
+    }
+  if(!prefersReducedMotion)  startAutoRotate();
+</script>
+</body>
+</html>
