@@ -96,7 +96,7 @@
             <span aria-hidden="true">&#9654; </span> 
          </button>
         <section class="carousel-container" aria-label="carousel" aria-live="polite">
-            <div class="carousel" >
+            <div class="carousel">
                 <div class="carousel-item" role="group" aria-roledescription="slide" aria-label="1 of 3" aria-hidden="false">
                     <img src="/slide_image/image1.jpg" alt="Image 1">
                 </div>
@@ -126,8 +126,7 @@
     const playPauseButton = document.querySelector('.play-pause-button');
     const carouselContainer = document.querySelector('.carousel-container');
     const prevButton = document.getElementById('prevButton');
-    const nextButton = document.getElementById('nextButton')
-    let ariaLiveTimeout;
+    const nextButton = document.getElementById('nextButton');
     let isAutoRotating = false;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -144,9 +143,6 @@
         }
 
         updateCarousel();
-        if (!isAutoRotating) {
-            carouselContainer.setAttribute('aria-live', 'polite');
-        }
     }
 
     function updateCarousel() {
@@ -163,39 +159,37 @@
         });
     }
 
-        prevButton.addEventListener('focus', () => {
-            carouselContainer.setAttribute('aria-live', 'polite');
-            
-            stopAutoRotate(); 
-        });
-        prevButton.addEventListener('blur', () => {
-            carouselContainer.setAttribute('aria-live', 'off');
-            startAutoRotate(); 
-        });
+    prevButton.addEventListener('focus', () => {
+        carouselContainer.setAttribute('aria-live', 'polite');
+        stopAutoRotate(); 
+    });
+    prevButton.addEventListener('blur', () => {
+        carouselContainer.setAttribute('aria-live', 'off');
+        startAutoRotate(); 
+    });
 
-        nextButton.addEventListener('focus', () => {
-            carouselContainer.setAttribute('aria-live', 'polite');
-            console.log('focused')
-            stopAutoRotate(); 
-        });
-        nextButton.addEventListener('blur', () => {
-            carouselContainer.setAttribute('aria-live', 'off');
-            startAutoRotate(); 
-        });
+    nextButton.addEventListener('focus', () => {
+        carouselContainer.setAttribute('aria-live', 'polite');
+        stopAutoRotate(); 
+    });
+    nextButton.addEventListener('blur', () => {
+        carouselContainer.setAttribute('aria-live', 'off');
+        startAutoRotate(); 
+    });
 
     // Start auto-rotation
     function startAutoRotate() {
-        if(prefersReducedMotion) return;
+        if (prefersReducedMotion) return;
+        if (isAutoRotating) return;
+
         isAutoRotating = true;
-    
         playPauseButton.setAttribute('aria-label', 'Pause');
+        playPauseButton.innerHTML = '&#10074;&#10074;';  
         carouselContainer.setAttribute('aria-live', 'off');
 
         autoRotateInterval = setInterval(() => {
             moveSlide(1);  
         }, 3000);  
-
-        playPauseButton.innerHTML = '&#10074;&#10074;';  
     }
 
     function stopAutoRotate() {
@@ -203,17 +197,22 @@
         autoRotateInterval = null;
         isAutoRotating = false;
         playPauseButton.setAttribute('aria-label', 'Play');
-        carouselContainer.setAttribute('aria-live', 'polite');
         playPauseButton.innerHTML = '&#9654;';  
+        carouselContainer.setAttribute('aria-live', 'polite');
     }
 
     function toggleAutoRotate() {
-        if (autoRotateInterval) {
+        if (isAutoRotating) {
             stopAutoRotate();  
+        } else {
             startAutoRotate();  
         }
     }
-  if(!prefersReducedMotion)  startAutoRotate();
+
+    // Initialize auto-rotation on page load if no reduced motion preference
+    if (!prefersReducedMotion) {
+        startAutoRotate();
+    }
 </script>
 </body>
 </html>
